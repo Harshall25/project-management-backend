@@ -60,7 +60,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NjRkYjZmZDNkM2UwZjU1NGM0YjE5MSI
 ---
 
 ## 2. PROJECT ROUTES
-**Note: Add header `token: <your-admin-token>` for all requests**
+**Note: Add header `Authorization: Bearer <your-admin-token>` for all requests**
 
 ### POST /project (Create Project - Admin Only)
 ```json
@@ -87,19 +87,19 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NjRkYjZmZDNkM2UwZjU1NGM0YjE5MSI
 ```
 
 ### GET /project (View All Projects)
-**Headers:** `token: <your-token>`
+**Headers:** `Authorization: Bearer <your-token>`
 
 No body required - Returns all projects for admin, or user's projects for regular users
 
 ### GET /project/:id (View Specific Project)
-**Headers:** `token: <your-token>`
+**Headers:** `Authorization: Bearer <your-token>`
 
 Replace `:id` with actual project ID from previous response
 
 Example: `GET /project/65a1234567890abcdef12345`
 
 ### DELETE /project/:id (Delete Project - Admin Only)
-**Headers:** `token: <your-admin-token>`
+**Headers:** `Authorization: Bearer <your-admin-token>`
 
 Replace `:id` with actual project ID
 
@@ -108,7 +108,7 @@ Example: `DELETE /project/65a1234567890abcdef12345`
 ---
 
 ## 3. TASK ROUTES
-**Note: Add header `token: <your-admin-token>` for POST/PATCH/DELETE**
+**Note: Add header `Authorization: Bearer <your-admin-token>` for POST/PATCH/DELETE**
 
 ### POST /tasks (Create Task - Admin Only)
 ```json
@@ -150,19 +150,19 @@ Example: `DELETE /project/65a1234567890abcdef12345`
 ```
 
 ### GET /tasks (View All Tasks)
-**Headers:** `token: <your-token>`
+**Headers:** `Authorization: Bearer <your-token>`
 
 No body required - Returns all tasks for admin, or user's assigned tasks for regular users
 
 ### GET /tasks/:id (View Specific Task)
-**Headers:** `token: <your-token>`
+**Headers:** `Authorization: Bearer <your-token>`
 
 Replace `:id` with actual task ID from previous response
 
 Example: `GET /tasks/65a1234567890abcdef12345`
 
 ### PATCH /tasks/:id (Update Task - Admin Only)
-**Headers:** `token: <your-admin-token>`
+**Headers:** `Authorization: Bearer <your-admin-token>`
 
 ```json
 {
@@ -174,7 +174,7 @@ Example: `GET /tasks/65a1234567890abcdef12345`
 You can update any field: `title`, `description`, `status`, `priority`, `assignedto`, `duedate`
 
 ### DELETE /tasks/:id (Delete Task - Admin Only)
-**Headers:** `token: <your-admin-token>`
+**Headers:** `Authorization: Bearer <your-admin-token>`
 
 Replace `:id` with actual task ID
 
@@ -206,7 +206,7 @@ Example: `DELETE /tasks/65a1234567890abcdef12345`
 
 ```
 Content-Type: application/json
-token: <your-jwt-token-here>
+Authorization: Bearer <your-jwt-token-here>
 ```
 
 ---
@@ -231,7 +231,7 @@ curl -X POST http://localhost:3000/api/v1/signin \
 ```bash
 curl -X POST http://localhost:3000/api/v1/project \
   -H "Content-Type: application/json" \
-  -H "token: YOUR_TOKEN_HERE" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -d '{"title":"E-Commerce Website","description":"Building a full-stack e-commerce platform"}'
 ```
 
@@ -239,7 +239,7 @@ curl -X POST http://localhost:3000/api/v1/project \
 ```bash
 curl -X POST http://localhost:3000/api/v1/tasks \
   -H "Content-Type: application/json" \
-  -H "token: YOUR_ADMIN_TOKEN_HERE" \
+  -H "Authorization: Bearer YOUR_ADMIN_TOKEN_HERE" \
   -d '{"title":"Design Homepage","description":"Create mockups","project":"PROJECT_ID","assignedto":"USER_ID","status":"todo","priority":"high"}'
 ```
 

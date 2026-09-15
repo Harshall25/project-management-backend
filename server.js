@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 require('dotenv').config();
 const app = express();
 const {authRouter} = require('./routes/auth');
@@ -47,6 +48,30 @@ app.use('/api/v1',authRouter);
 app.use('/api/v1',projectRouter);
 app.use('/api/v1',taskRouter);
 
-app.listen(3000, () =>{
-    console.log('Server is running on port 3000');
+const PORT = process.env.PORT || 3000;
+const server = app.listen(PORT, () =>{
+    console.log(`Server is running on port ${PORT}`);
 });
+
+// Graceful shutdown: stop accepting new connections, drain in-flight
+// requests, then close the DB connection before exiting.
+const shutdown = (signal) => {
+    console.log(`${signal} received, shutting down gracefully`);
+    server.close(async () => {
+        try {
+            await mongoose.connection.close();
+        } catch (err) {
+            console.error('Error closing MongoDB connection:', err.message);
+        }
+        process.exit(0);
+    });
+
+    // Force-exit if connections don't drain in time.
+    setTimeout(() => {
+        console.error('Forced shutdown: connections did not drain in time');
+        process.exit(1);
+    }, 10000).unref();
+};
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));

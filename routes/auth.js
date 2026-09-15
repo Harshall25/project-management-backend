@@ -3,8 +3,13 @@ const {User} = require('../schema');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const z = require('zod');
+const {JWT_KEY} = require('../middlewares/authmiddleware');
 const authRouter = express.Router();
-const JWT_KEY = process.env.JWT_KEY || "Key";
+
+// bcrypt work factor. 10+ is the recommended minimum.
+const BCRYPT_ROUNDS = 12;
+// Lifetime of an issued JWT. Tokens must expire so a leaked token ages out.
+const JWT_EXPIRES_IN = '1h';
 
 const signupSchema = z.object({
     name: z.string().min(1),
@@ -106,7 +111,7 @@ authRouter.post('/signup',async function(req,res){
         //do validation of the input using zod
 
         //do hashing of password
-        const hashedPassword = await bcrypt.hash(password, 5);
+        const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
         //email already exists
         const existAlready = await User.findOne({email});
@@ -251,7 +256,7 @@ authRouter.post('/signin',async function(req,res){
         const token = jwt.sign({
             id : user._id.toString(),
             role : user.role
-        }, JWT_KEY);
+        }, JWT_KEY, { expiresIn: JWT_EXPIRES_IN });
 
         res.status(200).json({
             success : true,
